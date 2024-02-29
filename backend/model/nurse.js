@@ -38,13 +38,13 @@ class Nurse {
   update(connection) {
     const query = `update nurse set name = ?, dob = ?,age = ? where license = ?`;
     const attr = [this.#name, this.#dob, this.#age, this.#license];
-    connection.executeQuery(query, attr);
+    return connection.executeQuery(query, attr);
   }
 
-  delete(connection) {
+  delete(connection, license) {
     const query = ` delete from nurse where license = ?;`;
-    const attr = [this.#license];
-    connection.executeQuery(query, attr);
+    const attr = [license];
+    return connection.executeQuery(query, attr);
   }
 }
 

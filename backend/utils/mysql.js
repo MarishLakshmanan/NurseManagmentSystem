@@ -3,10 +3,10 @@ import logger from "./logger.js";
 
 class MySQL {
   #connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "rootroot",
-    database: "nurse",
+    host: process.env.host || "localhost",
+    user: process.env.user || "root",
+    password: process.env.password || "rootroot",
+    database: process.env.database || "nurse",
   });
 
   mysqlErrorCodes = {
@@ -45,17 +45,21 @@ class MySQL {
   }
 
   getAll() {
-    this.#connection.query(
-      "SELECT * FROM nurse",
-      function (error, results, fields) {
-        if (error) {
-          logger.error(error.message);
-          logger.error(error.code);
-          return;
+    const p = new Promise((resolve, reject) => {
+      this.#connection.query(
+        "SELECT * FROM nurse",
+        function (error, results, fields) {
+          if (error) {
+            logger.error(error.message);
+            logger.error(error.code);
+            reject(error.code);
+            return;
+          }
+          resolve(results);
         }
-        console.log(results[0].dob);
-      }
-    );
+      );
+    });
+    return p;
   }
 
   stop() {
