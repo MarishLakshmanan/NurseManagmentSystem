@@ -1,11 +1,11 @@
+import logger from "../utils/logger.js";
+
 class Nurse {
-  #id;
   #name;
   #license;
   #dob;
   #age;
-  constructor(id, name, license, dob, age) {
-    this.#id = id;
+  constructor(license, name, dob, age) {
     this.#name = name;
     this.#license = license;
     this.#dob = dob;
@@ -13,7 +13,7 @@ class Nurse {
   }
 
   print() {
-    console.log(`ID : ${this.#id} \n
+    console.log(`
     Name : ${this.#name} \n 
     License no : ${this.#license} \n
     Date of Birth : ${this.#dob} \n
@@ -22,7 +22,6 @@ class Nurse {
 
   convert() {
     return {
-      id: this.#id,
       name: this.#name,
       license: this.#license,
       dob: this.#dob,
@@ -30,11 +29,23 @@ class Nurse {
     };
   }
 
-  save(connection) {}
+  save(connection) {
+    const query = `insert into nurse values  (?,?,?,?)`;
+    const attr = [this.#license, this.#name, this.#dob, this.#age];
+    return connection.executeQuery(query, attr);
+  }
 
-  update(connection) {}
+  update(connection) {
+    const query = `update nurse set name = ?, dob = ?,age = ? where license = ?`;
+    const attr = [this.#name, this.#dob, this.#age, this.#license];
+    connection.executeQuery(query, attr);
+  }
 
-  delete(connection) {}
+  delete(connection) {
+    const query = ` delete from nurse where license = ?;`;
+    const attr = [this.#license];
+    connection.executeQuery(query, attr);
+  }
 }
 
 export default Nurse;
