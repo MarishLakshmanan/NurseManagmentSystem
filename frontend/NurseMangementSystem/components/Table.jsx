@@ -12,6 +12,7 @@ import {
 import { useLayoutEffect, useState } from "react";
 import Form from "./Form";
 import axios from "axios";
+import config from "../config.json";
 
 export default function Table({ rows }) {
   const [modal, setModal] = useState(false);
@@ -63,7 +64,7 @@ export default function Table({ rows }) {
   useLayoutEffect(() => {}, []);
 
   async function deleteEntry(license) {
-    const res = await axios.delete(`http://localhost:3000/nurse/${license}`);
+    const res = await axios.delete(`${config.proxy}${license}`);
     if (res.data == "OK") {
       setgoodSnack(true);
       setDataRows((prev) => {
@@ -141,7 +142,7 @@ export default function Table({ rows }) {
       </div>
       <Snackbar
         open={goodSnack}
-        autoHideDuration={5000}
+        autoHideDuration={3000}
         severity={"Success"}
         message={message}
         onClose={() => {
@@ -150,7 +151,7 @@ export default function Table({ rows }) {
       />
       <Snackbar
         open={badSnack}
-        autoHideDuration={5000}
+        autoHideDuration={3000}
         severity={"Error"}
         message={message}
         onClose={() => {

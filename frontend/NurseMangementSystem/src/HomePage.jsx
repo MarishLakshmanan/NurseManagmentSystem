@@ -5,16 +5,16 @@ import Table from "../components/Table.jsx";
 import axios from "axios";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
+import config from "../config.json";
 
 export default function HomePage() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
-
   useLayoutEffect(() => {
     setLoading(true);
     async function getEntries() {
       try {
-        const res = await axios.get("http://localhost:3000/nurse/");
+        const res = await axios.get(config.proxy);
         let nurses = [];
         res.data.map((data) => {
           nurses.push({ ...data, dob: new Date(data.dob) });

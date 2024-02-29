@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import axios from "axios";
+import config from "../config.json";
 
 export default function Form({
   closeModal,
@@ -20,7 +21,7 @@ export default function Form({
     try {
       if (formData) {
         data.license = formData.license;
-        const res = await axios.patch("http://localhost:3000/nurse", data);
+        const res = await axios.patch(config.proxy, data);
         if (res.data == "OK") {
           success("Succesfully updated the Database");
           data.dob = new Date(data.dob);
@@ -28,25 +29,29 @@ export default function Form({
             let filtered = prev.filter(
               (nurse) => nurse.license != data.license
             );
+
             return [...filtered, data];
           });
+          closeModal();
         } else {
           error(res.data);
         }
       } else {
-        const res = await axios.post("http://localhost:3000/nurse", data);
+        const res = await axios.post(config.proxy, data);
         if (res.data == "OK") {
           success("Successfully added to the Database");
           data.dob = new Date(data.dob);
           dataRows((prev) => {
             return [...prev, data];
           });
+          closeModal();
         } else {
           error(res.data);
         }
       }
     } catch (e) {
       console.log(e);
+      closeModal();
     }
   }
   return (
